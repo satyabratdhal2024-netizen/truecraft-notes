@@ -1,4 +1,4 @@
-// TrueCraft Notes server: zero dependencies, Node 20+. Emails every order (with files) to the owner's Gmail.
+// TrueCraft Notes server: zero dependencies, Node 20+. Emails every order (with files) to the owner.
 import http from 'node:http';
 import {readFileSync,readdirSync,mkdirSync,writeFileSync,existsSync} from 'node:fs';
 import tls from 'node:tls';
@@ -15,6 +15,8 @@ const PORT=+E.PORT||4318;
 const MAX=8*1024*1024;
 const GMAIL=E.GMAIL_USER||'truecraftnotes.ss@gmail.com';
 const APP=(E.GMAIL_APP_PASSWORD||'').replace(/\s/g,'');
+const RESEND_KEY=(E.RESEND_API_KEY||'').trim();
+const RESEND_FROM=(E.RESEND_FROM||'TrueCraft Notes <onboarding@resend.dev>').trim();
 const TO=E.OWNER_EMAIL||GMAIL;
 const RATE=4;
 
@@ -64,6 +66,33 @@ function smtp(msg){
   });
 }
 
+async function sendResend({replyTo,subject,html,files}){
+  if(!TO)throw new Error('Recipient email is missing');
+  const payload={
+    from:RESEND_FROM,
+    to:[TO],
+    subject,
+    html,
+    ...(replyTo?{reply_to:replyTo}:{}),
+    ...(files&&files.length?{
+      attachments:files.map(f=>({
+        filename:f.safe||f.name,
+        content:Buffer.from(f.buf).toString('base64')
+      }))
+    }:{})
+  };
+  const r=await fetch('https://api.resend.com/emails',{
+    method:'POST',
+    headers:{
+      'Authorization':'Bearer '+RESEND_KEY,
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify(payload)
+  });
+  const text=await r.text();
+  if(!r.ok)throw new Error(`Resend HTTP ${r.status}: ${text}`);
+}
+
 function orderMail(o,files){
   const row=(k,v)=>`<tr><td style="padding:10px 14px;border-bottom:1px solid #e6ecf5;color:#5a6685;font-weight:700;width:160px;vertical-align:top">${k}</td><td style="padding:10px 14px;border-bottom:1px solid #e6ecf5;color:#162447">${v}</td></tr>`;
   const fileList=files.map((f,i)=>`${i+1}. <b>${esc(f.name)}</b> <span style="color:#5a6685">(${(f.buf.length/1048576).toFixed(2)} MB)</span>`).join('<br>');
@@ -97,17 +126,22 @@ function orderMail(o,files){
   };
 }
 
+async function sendMail(mail){
+  if(RESEND_KEY)return await sendResend(mail);
+  await smtp(mime(mail));
+}
+
 async function deliver(dir,mail){
   for(const wait of [0,20e3,90e3,300e3]){
     await new Promise(r=>setTimeout(r,wait));
     try{
-      await smtp(mime(mail));
+      await sendMail(mail);
       writeFileSync(dir+'/sent.flag',new Date().toISOString());
       console.log('Emailed',dir,'to',TO);
       return;
     }catch(e){console.error('Email failed:',e.message)}
   }
-  console.error('GAVE UP emailing',dir,'- files are saved there. Fix .env and restart; unsent orders are retried on start.');
+  console.error('GAVE UP emailing',dir,'- files are saved there. Fix .env or RESEND_API_KEY and restart; unsent orders are retried on start.');
 }
 
 mkdirSync('orders',{recursive:true});
@@ -172,7 +206,7 @@ async function order(req,res){
 
 if(process.argv.includes('--test-mail')){
   try{
-    await smtp(mime({subject:'TrueCraft test email',html:'<p>Your Gmail connection works. Orders will arrive here automatically.</p>',files:[]}));
+    await sendMail({subject:'TrueCraft test email',html:'<p>Your email connection works. Orders will arrive here automatically.</p>',files:[]});
     console.log('Test email sent to',TO);
   }catch(e){console.error('FAILED:',e.message)}
   process.exit();
@@ -188,6 +222,6 @@ http.createServer(async(req,res)=>{
   }catch(e){console.error(e);if(!res.headersSent)fail(res,500,'Something went wrong. Please try again.')}
 }).listen(PORT,()=>{
   console.log(`\nTrueCraft Notes is live at http://localhost:${PORT}`);
-  console.log(GMAIL&&(APP||E.SMTP_HOST)?`Orders will be emailed to ${TO}`:'!! EMAIL NOT SET UP: add GMAIL_APP_PASSWORD to .env (see README.txt). Orders are still saved in the orders folder.');
+  console.log(RESEND_KEY?`Orders will be emailed to ${TO} via Resend`:(GMAIL&&(APP||E.SMTP_HOST)?`Orders will be emailed to ${TO}`:'!! EMAIL NOT SET UP: add RESEND_API_KEY or GMAIL_APP_PASSWORD (see README.txt). Orders are still saved in the orders folder.'));
   resend();
 });
