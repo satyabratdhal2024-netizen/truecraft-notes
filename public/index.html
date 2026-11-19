@@ -9,39 +9,32 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23162447'/%3E%3Cpath d='M18 20h28M32 20v26M42 36c-4-5-12-4-14 2s3 10 9 8' fill='none' stroke='%23ffe14d' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
-<script>
-// Apply saved or system theme before first paint (prevents flicker)
-(()=>{const t=localStorage.getItem('tc-theme')||'system';const d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.mode=t;})();
-</script>
 <style>
 :root{
   --ink:#162447;--ink2:#2c3e78;--paper:#fbfcff;--card:#ffffff;--line:#cfe0f3;--desk:#e9f0f9;
-  --red:#e5484d;--hi:#ffe14d;--ok:#12906f;--mut:#5a6685;--navbg:rgba(233,240,249,.84);
-  --shadow:rgba(22,36,71,.35);--sheet-ink:#1f3a8a;--stack1:#dbe6f5;--stack2:#c8d8ee;
+  --red:#e5484d;--hi:#ffe14d;--ok:#12906f;--mut:#5a6685;--navbg:rgba(233,240,249,.9);
+  --shadow:rgba(22,36,71,.28);--sheet-ink:#1f3a8a;--stack1:#dbe6f5;--stack2:#c8d8ee;
   --k1:#d8ecff;--k2:#fff1b3;--k3:#dcf5e8;--input-bg:#ffffff;--btn-bg:#162447;--btn-fg:#ffffff;
   --hand:Caveat,"Segoe Script","Bradley Hand",cursive;--sans:Manrope,"Segoe UI",system-ui,sans-serif;
 }
-html[data-theme="dark"]{
-  --ink:#f1f5ff;--ink2:#93b4ff;--paper:#131b2e;--card:#172138;--line:#243354;--desk:#0b1120;
-  --red:#ff6b6b;--hi:#ffd43b;--ok:#20c997;--mut:#9aa8c7;--navbg:rgba(11,17,32,.84);
-  --shadow:rgba(0,0,0,.65);--sheet-ink:#a8c5ff;--stack1:#1a2642;--stack2:#111a30;
-  --k1:#172a4a;--k2:#332b14;--k3:#133329;--input-bg:#0f1729;--btn-bg:#ffd43b;--btn-fg:#0b1120;
-}
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
-body{margin:0;font:16px/1.6 var(--sans);color:var(--ink);background:var(--desk);transition:background .35s ease,color .35s ease;overflow-x:hidden}
-button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}a{color:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:80px;overflow-x:clip}
+body{margin:0;font:16px/1.6 var(--sans);color:var(--ink);background:var(--desk);overflow-x:clip;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
 :focus-visible{outline:3px solid var(--red);outline-offset:3px}
-.ruled{background:var(--paper) repeating-linear-gradient(transparent 0 35px,var(--line) 35px 36px);transition:background .35s ease}
+.ruled{background:var(--paper) repeating-linear-gradient(transparent 0 35px,var(--line) 35px 36px)}
+.wrap{max-width:1180px;margin:0 auto;width:100%}
 
 /* ---- Compact Opening Animation ---- */
 #intro{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#0b1120;color:#fff;transition:opacity .45s ease,visibility .45s ease}
 #intro.hide{opacity:0;visibility:hidden;pointer-events:none}
-.intro-box{text-align:center;animation:introPop .55s cubic-bezier(.2,.9,.3,1) both}
-.intro-svg{width:76px;height:76px;margin:0 auto 10px;display:block}
+.intro-box{text-align:center;animation:introPop .55s cubic-bezier(.2,.9,.3,1) both;padding:0 20px}
+.intro-svg{width:72px;height:72px;margin:0 auto 10px;display:block}
 .intro-svg path{stroke-dasharray:140;stroke-dashoffset:140;animation:drawLogo .9s cubic-bezier(.4,0,.2,1) forwards}
-.intro-name{font:700 44px/1 var(--hand);color:#fff;letter-spacing:.5px;opacity:0;animation:fadeUp .5s .25s ease forwards}
+.intro-name{font:700 clamp(36px,8vw,44px)/1 var(--hand);color:#fff;letter-spacing:.5px;opacity:0;animation:fadeUp .5s .25s ease forwards}
 .intro-name span{color:#ffe14d}
 .intro-bar{width:120px;height:3px;border-radius:9px;background:rgba(255,255,255,.15);margin:14px auto 0;overflow:hidden}
 .intro-bar i{display:block;height:100%;width:0;background:#ffe14d;animation:loadBar 1.15s ease-out forwards}
@@ -51,136 +44,182 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}a{
 @keyframes introPop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* ---- Header & Theme Toggle ---- */
-header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 5vw;background:var(--navbg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:background .35s,border-color .35s}
-.brand{font:700 30px/1 var(--hand);text-decoration:none;display:flex;align-items:center;gap:10px}
-.brand i{width:34px;height:34px;border-radius:9px;background:var(--btn-bg);display:grid;place-items:center;color:var(--btn-fg);font:700 24px/1 var(--hand);font-style:normal;transform:rotate(-6deg);transition:transform .3s}
+/* ---- Header ---- */
+header{position:sticky;top:0;z-index:20;background:var(--navbg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hdr-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px clamp(16px,4vw,32px)}
+.brand{font:700 clamp(22px,4vw,30px)/1 var(--hand);text-decoration:none;display:flex;align-items:center;gap:9px;white-space:nowrap}
+.brand i{width:32px;height:32px;border-radius:9px;background:var(--btn-bg);display:grid;place-items:center;color:var(--btn-fg);font:700 22px/1 var(--hand);font-style:normal;transform:rotate(-6deg);transition:transform .3s;flex-shrink:0}
 .brand:hover i{transform:rotate(6deg) scale(1.08)}
-nav{margin-left:auto;display:flex;gap:24px;font-weight:700;font-size:14px}
-nav a{text-decoration:none;opacity:.78;position:relative;padding:4px 0}
+nav{margin-left:auto;margin-right:10px;display:flex;gap:22px;font-weight:700;font-size:14px}
+nav a{text-decoration:none;opacity:.8;position:relative;padding:4px 0;white-space:nowrap}
 nav a:after{content:"";position:absolute;left:0;right:100%;bottom:0;height:2px;background:var(--hi);transition:right .25s ease}
-nav a:hover{opacity:1}nav a:hover:after{right:0}
-.theme-btn{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:7px 13px;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:6px;transition:transform .2s,border-color .2s}
-.theme-btn:hover{transform:translateY(-2px);border-color:var(--hi)}
+nav a:hover{opacity:1}
+nav a:hover:after{right:0}
 
-.btn{border:0;border-radius:12px;background:var(--btn-bg);color:var(--btn-fg);padding:13px 22px;font-weight:800;text-decoration:none;display:inline-block;transition:transform .22s cubic-bezier(.2,.9,.3,1),box-shadow .22s,filter .2s}
-.btn:hover{transform:translateY(-3px) rotate(-1deg);box-shadow:0 10px 0 -2px var(--red);filter:brightness(1.06)}
+.btn{border:0;border-radius:12px;background:var(--btn-bg);color:var(--btn-fg);padding:12px 20px;font-weight:800;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;transition:transform .22s cubic-bezier(.2,.9,.3,1),box-shadow .22s,filter .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 -2px var(--red);filter:brightness(1.06)}
 .btn:active{transform:translateY(0);box-shadow:none}
 .btn:disabled{opacity:.6;transform:none;box-shadow:none}
 
-/* ---- Hero & Floating Ink Sparks ---- */
-.hero{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:4vw;align-items:center;padding:5.5vw 5vw 5vw;overflow:hidden}
-.spark{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--hi);opacity:.28;pointer-events:none;animation:floatSpark var(--d,7s) ease-in-out infinite alternate}
+/* ---- Hero ---- */
+.hero-wrap{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero{position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,4vw,56px);align-items:center;padding:clamp(36px,5.5vw,76px) clamp(16px,4vw,32px)}
+.spark{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--hi);opacity:.32;pointer-events:none;animation:floatSpark var(--d,7s) ease-in-out infinite alternate}
 @keyframes floatSpark{from{transform:translate(0,0) scale(1)}to{transform:translate(var(--tx,18px),var(--ty,-26px)) scale(1.4)}}
-h1{font:700 clamp(54px,8.8vw,130px)/.88 var(--hand);margin:0 0 22px;letter-spacing:-1px;min-height:2.4em}
-.ch{opacity:0;display:inline-block;transform:translateY(8px) rotate(-3deg);filter:blur(3px);transition:.25s}.ch.on{opacity:1;transform:none;filter:none}.ch.sp{width:.28em}
+
+h1{font:700 clamp(46px,7.2vw,108px)/.92 var(--hand);margin:0 0 18px;letter-spacing:-.5px;min-height:1.9em}
+.wd{display:inline-block;white-space:nowrap}
+.ch{opacity:0;display:inline-block;transform:translateY(6px) rotate(-2deg);filter:blur(2px);transition:.22s}
+.ch.on{opacity:1;transform:none;filter:none}
 mark{background:linear-gradient(transparent 55%,var(--hi) 55% 92%,transparent 92%);color:inherit;padding:0 .08em}
-html[data-theme="dark"] mark{color:#0b1120;border-radius:6px}
-.lead{font-size:19px;max-width:30em}.lead b{background:var(--hi);color:#162447;padding:0 6px;border-radius:5px}
-.cta{display:flex;gap:22px;align-items:center;margin-top:28px;flex-wrap:wrap}
-#pen{position:absolute;z-index:5;width:46px;height:46px;pointer-events:none;transition:left .09s linear,top .09s linear,opacity .4s;opacity:0;transform-origin:4px 42px;animation:wob .5s ease-in-out infinite alternate}
+.lead{font-size:clamp(16px,1.8vw,19px);max-width:30em;margin:0}
+.lead b{background:var(--hi);color:#162447;padding:1px 7px;border-radius:5px;white-space:nowrap}
+.cta{display:flex;gap:16px 22px;align-items:center;margin-top:24px;flex-wrap:wrap}
+.cta-link{font-weight:800;font-size:15px;text-underline-offset:4px}
+#pen{position:absolute;z-index:5;width:42px;height:42px;pointer-events:none;transition:left .09s linear,top .09s linear,opacity .4s;opacity:0;transform-origin:4px 38px;animation:wob .5s ease-in-out infinite alternate}
 @keyframes wob{to{rotate:-9deg}}
 
-.sheet{position:relative;transform:rotate(2.2deg);border-radius:6px 18px 18px 6px;padding:26px 28px 26px 70px;min-height:430px;box-shadow:0 2px 0 rgba(255,255,255,.08) inset,0 30px 50px -22px var(--shadow),12px 12px 0 -2px var(--stack1),22px 22px 0 -4px var(--stack2);transition:transform .5s cubic-bezier(.2,.9,.3,1),box-shadow .4s}
-.sheet:hover{transform:rotate(0) translateY(-6px)}
-.sheet:before{content:"";position:absolute;left:52px;top:0;bottom:0;width:2px;background:var(--red);opacity:.7}
-.sheet:after{content:"";position:absolute;left:14px;top:60px;bottom:60px;width:14px;background:radial-gradient(circle,var(--desk) 5px,transparent 6px) 0 0/14px 70px}
-.sheet small{font-weight:800;color:var(--mut);font-size:12px;letter-spacing:.06em;display:block;margin-bottom:6px}
-.sheet .l{font:600 30px/36px var(--hand);min-height:36px;color:var(--sheet-ink)}.sheet .t{font:700 42px/36px var(--hand);margin:4px 0 0;min-height:60px}
-.stamp{position:absolute;right:-14px;bottom:36px;width:112px;height:112px;border-radius:50%;background:var(--hi);color:#162447;display:grid;place-items:center;text-align:center;font:800 13px/1.1 var(--sans);transform:rotate(14deg);box-shadow:0 8px 0 -2px #d9b800;animation:bob 3s ease-in-out infinite}.stamp b{font:700 46px/.9 var(--hand);display:block}
-@keyframes bob{50%{transform:rotate(8deg) translateY(-8px)}}
+/* ---- Notebook Sheet ---- */
+.sheet{position:relative;transform:rotate(1.8deg);border-radius:8px 18px 18px 8px;padding:24px 26px 30px 66px;min-height:390px;width:100%;box-shadow:0 2px 0 rgba(255,255,255,.5) inset,0 24px 44px -20px var(--shadow),10px 10px 0 -2px var(--stack1),18px 18px 0 -4px var(--stack2);transition:transform .4s cubic-bezier(.2,.9,.3,1)}
+.sheet:hover{transform:rotate(0) translateY(-4px)}
+.sheet:before{content:"";position:absolute;left:48px;top:0;bottom:0;width:2px;background:var(--red);opacity:.7}
+.sheet:after{content:"";position:absolute;left:13px;top:52px;bottom:52px;width:14px;background:radial-gradient(circle,var(--desk) 5px,transparent 6px) 0 0/14px 68px}
+.sheet small{font-weight:800;color:var(--mut);font-size:11px;letter-spacing:.08em;display:block;margin-bottom:4px}
+.sheet .t{font:700 clamp(30px,3.2vw,40px)/36px var(--hand);margin:2px 0 6px;min-height:36px}
+.sheet .l{font:600 clamp(22px,2.3vw,28px)/36px var(--hand);min-height:36px;color:var(--sheet-ink)}
+.stamp{position:absolute;right:10px;bottom:14px;width:94px;height:94px;border-radius:50%;background:var(--hi);color:#162447;display:grid;place-items:center;text-align:center;font:800 12px/1.1 var(--sans);transform:rotate(12deg);box-shadow:0 6px 0 -2px #d9b800;animation:bob 3s ease-in-out infinite}
+.stamp b{font:700 40px/.9 var(--hand);display:block}
+@keyframes bob{50%{transform:rotate(7deg) translateY(-6px)}}
 
-.belt{background:#162447;color:#fff;overflow:hidden;white-space:nowrap;padding:14px 0;transform:rotate(-1deg);margin:0 -2vw;border-block:1px solid rgba(255,255,255,.1)}
-.belt div{display:inline-block;animation:belt 28s linear infinite;font:700 30px var(--hand)}.belt span{margin:0 28px}.belt span:nth-child(even){color:var(--hi)}
+/* ---- Belt ---- */
+.belt-wrap{overflow:hidden;width:100%;background:#162447;color:#fff;padding:12px 0;border-block:1px solid rgba(255,255,255,.1)}
+.belt{white-space:nowrap}
+.belt div{display:inline-block;animation:belt 28s linear infinite;font:700 clamp(22px,3vw,28px) var(--hand)}
+.belt span{margin:0 22px}
+.belt span:nth-child(even){color:var(--hi)}
 @keyframes belt{to{transform:translateX(-50%)}}
 
 /* ---- Scroll Reveal ---- */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.2,.8,.2,1),transform .65s cubic-bezier(.2,.8,.2,1)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
 .reveal.in{opacity:1;transform:none}
 
-section{padding:6.5vw 5vw}
-h2{font:700 clamp(44px,6vw,84px)/.95 var(--hand);margin:0 0 14px}
-.sub{max-width:34em;color:var(--mut);margin:0 0 34px}
+section{padding:clamp(44px,6vw,84px) clamp(16px,4vw,32px)}
+h2{font:700 clamp(38px,5.5vw,74px)/.98 var(--hand);margin:0 0 10px}
+.sub{max-width:34em;color:var(--mut);margin:0 0 28px;font-size:clamp(15px,1.5vw,16px)}
 
 /* ---- Calculator ---- */
-.calc{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:24px;overflow:hidden;box-shadow:0 30px 60px -30px var(--shadow);border:1px solid var(--line)}
-.calc>div{padding:clamp(24px,4vw,56px)}.calc .a{background:#162447;color:#fff}.calc .a p{opacity:.82}
-.big{font:700 clamp(80px,11vw,170px)/.9 var(--hand);color:var(--hi);margin:6px 0;transition:transform .2s}
-.stepper{display:flex;gap:10px;margin:14px 0}
-.stepper button{width:54px;border:2px solid var(--ink);background:var(--card);border-radius:12px;font:800 24px var(--sans);transition:transform .15s,background .2s}
-.stepper button:hover{background:var(--hi);color:#162447;transform:scale(1.06)}
-input,select,textarea{width:100%;padding:13px 14px;border:2px solid var(--line);border-radius:12px;background:var(--input-bg);transition:border .2s,box-shadow .2s,background .3s}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:20px;overflow:hidden;box-shadow:0 24px 50px -28px var(--shadow);border:1px solid var(--line)}
+.calc>div{padding:clamp(22px,4vw,48px)}
+.calc .a{background:#162447;color:#fff;display:flex;flex-direction:column;justify-content:center}
+.calc .a p{opacity:.85;margin:0}
+.big{font:700 clamp(62px,10vw,148px)/.92 var(--hand);color:var(--hi);margin:8px 0;word-break:break-word}
+.stepper{display:flex;gap:10px;margin:12px 0}
+.stepper button{width:50px;flex-shrink:0;border:2px solid var(--ink);background:var(--card);border-radius:12px;font:800 22px var(--sans);transition:transform .15s,background .2s}
+.stepper button:hover{background:var(--hi);color:#162447}
+input,select,textarea{width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--input-bg);font-size:16px;transition:border .2s,box-shadow .2s}
 input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ink2);box-shadow:0 0 0 4px rgba(255,225,77,.45)}
-.stepper input{font:800 24px var(--sans);text-align:center}
+.stepper input{font:800 22px var(--sans);text-align:center}
 input[type=range]{padding:0;border:0;accent-color:var(--ink2);margin:10px 0;background:transparent}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
-.chips button{border:2px solid var(--line);background:var(--card);border-radius:99px;padding:6px 16px;font-weight:800;transition:transform .18s,background .2s}
-.chips button:hover,.chips .on{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg);transform:translateY(-2px)}
+.chips button{border:2px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-weight:800;font-size:14px;transition:transform .18s,background .2s}
+.chips button:hover,.chips .on{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg)}
 
 /* ---- Service Cards ---- */
-.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.kind{text-align:left;border:2px solid transparent;padding:26px;border-radius:18px;min-height:230px;transition:transform .32s cubic-bezier(.2,.9,.3,1),box-shadow .32s,border-color .25s;position:relative;display:flex;flex-direction:column;justify-content:flex-end}
-.kind:hover,.kind.on{transform:translateY(-10px) rotate(-1.2deg);box-shadow:0 22px 42px -18px var(--shadow);border-color:var(--hi)}
-.kind.on:after{content:"✓ Selected";position:absolute;top:16px;right:16px;background:var(--btn-bg);color:var(--btn-fg);border-radius:99px;padding:3px 12px;font-size:12px;font-weight:800;animation:pop .3s}
-.kind strong{font:700 40px/1 var(--hand)}.kind span{font-size:14px;opacity:.88}
+.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.kind{text-align:left;border:2px solid transparent;padding:24px;border-radius:18px;min-height:190px;transition:transform .28s cubic-bezier(.2,.9,.3,1),box-shadow .28s,border-color .25s;position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
+.kind:hover,.kind.on{transform:translateY(-6px);box-shadow:0 18px 34px -16px var(--shadow);border-color:var(--ink)}
+.kind.on:after{content:"✓ Selected";position:absolute;top:14px;right:14px;background:var(--btn-bg);color:var(--btn-fg);border-radius:99px;padding:3px 11px;font-size:12px;font-weight:800}
+.kind strong{font:700 36px/1 var(--hand)}
+.kind span{font-size:14px;opacity:.9}
 .k1{background:var(--k1)}.k2{background:var(--k2)}.k3{background:var(--k3)}
 
 /* ---- Steps ---- */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;position:relative}
-.steps svg{position:absolute;top:-22px;left:0;width:100%;height:60px;overflow:visible}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
+.steps svg{position:absolute;top:-22px;left:0;width:100%;height:60px;overflow:visible;pointer-events:none}
 .steps path{stroke:var(--red);stroke-width:3;fill:none;stroke-dasharray:6 9;stroke-dashoffset:900;transition:stroke-dashoffset 2s ease-out}
 .steps.in path{stroke-dashoffset:0}
-.steps b{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--hi);color:#162447;font:700 36px var(--hand);margin-bottom:12px;transition:transform .4s cubic-bezier(.2,1.6,.4,1)}
-.steps article:hover b{transform:rotate(-14deg) scale(1.16)}
-.steps h3{font:700 34px/1 var(--hand);margin:0 0 6px}.steps p{margin:0;color:var(--mut)}
+.steps b{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--hi);color:#162447;font:700 32px var(--hand);margin-bottom:10px}
+.steps h3{font:700 30px/1.05 var(--hand);margin:0 0 6px}
+.steps p{margin:0;color:var(--mut);font-size:15px}
 
 /* ---- Form & Upload ---- */
-.form{display:grid;grid-template-columns:.8fr 1.2fr;gap:4vw;align-items:start}
-form{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(20px,3vw,40px);display:grid;gap:16px;box-shadow:0 30px 60px -30px var(--shadow);grid-template-columns:1fr 1fr;transition:background .35s}
+.form{display:grid;grid-template-columns:.78fr 1.22fr;gap:clamp(24px,4vw,52px);align-items:start}
+form{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(18px,3vw,36px);display:grid;gap:14px;box-shadow:0 24px 50px -28px var(--shadow);grid-template-columns:1fr 1fr;width:100%}
 form .w{grid-column:1/-1}
-label{font-weight:800;font-size:14px;display:grid;gap:6px}label small{font-weight:500;color:var(--mut)}
-.drop{border:3px dashed var(--ink2);border-radius:18px;padding:30px;text-align:center;background:var(--desk);transition:.25s;cursor:pointer;display:block}
-.drop:hover{border-color:var(--hi);transform:translateY(-2px)}
-.drop.over{background:var(--hi);color:#162447;transform:scale(1.02);border-style:solid}
-.drop b{font:700 34px/1 var(--hand);display:block}.drop input{display:none}
+label{font-weight:800;font-size:14px;display:grid;gap:6px;min-width:0}
+label small{font-weight:500;color:var(--mut)}
+.drop{border:2.5px dashed var(--ink2);border-radius:16px;padding:24px 16px;text-align:center;background:var(--desk);transition:.2s;cursor:pointer;display:block;font-size:14px}
+.drop:hover{border-color:var(--ink);transform:translateY(-2px)}
+.drop.over{background:var(--hi);color:#162447;border-style:solid}
+.drop b{font:700 clamp(26px,5vw,32px)/1.05 var(--hand);display:block;margin-bottom:4px}
+.drop input{display:none}
 .files{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.files li{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--desk);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:14px;animation:pop .35s cubic-bezier(.2,1.5,.4,1)}
-.files button{border:0;background:0;font-weight:800;color:var(--red)}
-@keyframes pop{from{transform:scale(.85);opacity:0}}
-.sum{display:flex;justify-content:space-between;align-items:baseline;background:#162447;color:#fff;border-radius:14px;padding:14px 20px}
-.sum output{font:700 44px/1 var(--hand);color:var(--hi)}
-.err{color:var(--red);font-weight:800;min-height:1.4em}
+.files li{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--desk);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13px;min-width:0}
+.files li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.files button{border:0;background:0;font-weight:800;color:var(--red);flex-shrink:0;padding:2px 4px}
+.sum{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#162447;color:#fff;border-radius:14px;padding:14px 18px}
+.sum output{font:700 clamp(34px,6vw,42px)/1 var(--hand);color:var(--hi)}
+.err{color:var(--red);font-weight:800;font-size:14px;min-height:1.2em}
 .bar{height:8px;border-radius:9px;background:var(--desk);overflow:hidden;display:none}
 .bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .2s}
 .hp{position:absolute;left:-9999px}
-.ban{background:var(--hi);color:#162447;padding:12px 16px;border-radius:12px;font-weight:700;display:none}
+.ban{background:var(--hi);color:#162447;padding:12px 16px;border-radius:12px;font-weight:700;font-size:14px;display:none}
 
-/* ---- Satisfaction Completion Animation ---- */
-.done{grid-column:1/-1;text-align:center;padding:28px 14px;position:relative;overflow:hidden}
-.done-check{width:84px;height:84px;margin:0 auto 14px;display:block}
+/* ---- Completion Animation ---- */
+.done{grid-column:1/-1;text-align:center;padding:22px 10px}
+.done-check{width:76px;height:76px;margin:0 auto 12px;display:block}
 .done-check circle{stroke:var(--ok);stroke-width:4;fill:rgba(18,144,111,.12);stroke-dasharray:240;stroke-dashoffset:240;animation:drawRing .7s ease forwards}
 .done-check path{stroke:var(--ok);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:drawTick .45s .45s cubic-bezier(.2,.9,.3,1) forwards}
 @keyframes drawRing{to{stroke-dashoffset:0}}
 @keyframes drawTick{to{stroke-dashoffset:0}}
-.done .st{display:inline-block;border:4px solid var(--ok);color:var(--ok);border-radius:14px;padding:4px 22px;font:700 54px/1 var(--hand);transform:rotate(-6deg);animation:slam .55s .35s cubic-bezier(.2,1.9,.4,1) both}
-@keyframes slam{from{transform:rotate(-26deg) scale(2.6);opacity:0}}
-.done h3{font:700 46px/1 var(--hand);margin:18px 0 6px}
-.done-pill{display:inline-block;background:var(--desk);border:2px dashed var(--ok);border-radius:14px;padding:10px 22px;margin:12px 0;font-weight:800}
-.done-pill b{font:700 32px/1 var(--hand);color:var(--ok);margin-left:8px;letter-spacing:1px}
+.done .st{display:inline-block;border:4px solid var(--ok);color:var(--ok);border-radius:14px;padding:4px 18px;font:700 clamp(36px,8vw,50px)/1 var(--hand);transform:rotate(-5deg);animation:slam .55s .35s cubic-bezier(.2,1.9,.4,1) both}
+@keyframes slam{from{transform:rotate(-20deg) scale(2);opacity:0}}
+.done h3{font:700 clamp(34px,7vw,44px)/1.05 var(--hand);margin:16px 0 6px}
+.done-pill{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:6px;background:var(--desk);border:2px dashed var(--ok);border-radius:14px;padding:10px 18px;margin:12px 0;font-weight:800;font-size:14px}
+.done-pill b{font:700 28px/1 var(--hand);color:var(--ok);letter-spacing:1px}
 #confettiCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:300}
 
-details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:10px;max-width:760px;transition:transform .2s,border-color .2s}
-details:hover{transform:translateX(4px);border-color:var(--hi)}
-summary{font-weight:800;cursor:pointer}details p{margin:8px 0 0;color:var(--mut)}
-footer{background:#162447;color:#fff;padding:36px 5vw;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+/* ---- FAQ & Footer ---- */
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px;margin-bottom:10px;max-width:760px}
+summary{font-weight:800;cursor:pointer;font-size:15px}
+details p{margin:8px 0 0;color:var(--mut);font-size:15px}
+footer{background:#162447;color:#fff;padding:30px clamp(16px,4vw,32px)}
+.ftr-in{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:14px}
 footer .brand{color:#fff}
 
-@media(max-width:900px){.hero,.calc,.form,.kinds,.steps{grid-template-columns:1fr}nav{display:none}header .theme-btn{margin-left:auto}.sheet{min-height:340px}form{grid-template-columns:1fr}.steps svg{display:none}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ch,.reveal{opacity:1;transform:none;filter:none}#intro{display:none!important}html{scroll-behavior:auto}}
+/* ---- Tablet & Mobile Auto-Resize ---- */
+@media(max-width:860px){
+  nav{display:none}
+  .hero,.calc,.form,.kinds,.steps{grid-template-columns:1fr}
+  .steps svg{display:none}
+  .kind{min-height:130px;padding:20px}
+  .sheet{transform:none;box-shadow:0 16px 30px -16px var(--shadow),6px 6px 0 -1px var(--stack1);min-height:310px;padding:20px 18px 26px 48px}
+  .sheet:hover{transform:none}
+  .sheet:before{left:36px}
+  .sheet:after{left:9px;width:12px;background:radial-gradient(circle,var(--desk) 4px,transparent 5px) 0 0/12px 64px}
+  .stamp{width:76px;height:76px;right:10px;bottom:10px;font-size:10px}
+  .stamp b{font-size:32px}
+  #pen{display:none}
+  form{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hdr-in .btn{padding:9px 14px;font-size:13px;border-radius:10px}
+  .cta .btn{width:100%}
+  .cta{gap:12px}
+  .calc .btn{width:100%}
+  .sheet .t{font-size:28px;line-height:36px}
+  .sheet .l{font-size:21px;line-height:36px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .ch,.reveal{opacity:1;transform:none;filter:none}
+  #intro{display:none!important}
+  html{scroll-behavior:auto}
+}
 </style>
 </head>
 <body>
-<!-- Crisp Opening Animation -->
+<!-- Opening Animation -->
 <div id="intro" aria-hidden="true">
   <div class="intro-box">
     <svg class="intro-svg" viewBox="0 0 64 64" fill="none">
@@ -196,104 +235,141 @@ footer .brand{color:#fff}
 <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 
 <header>
-  <a class="brand" href="#top"><i>T</i>TrueCraft Notes</a>
-  <nav><a href="#price">Price</a><a href="#work">Services</a><a href="#how">How it works</a><a href="#faq">FAQ</a></nav>
-  <button type="button" class="theme-btn" id="themeBtn" title="Switch theme (System / Light / Dark)" aria-label="Switch color theme">🖥️ System</button>
-  <a class="btn" href="#order">Order now</a>
+  <div class="hdr-in">
+    <a class="brand" href="#top"><i>T</i>TrueCraft Notes</a>
+    <nav>
+      <a href="#price">Price</a>
+      <a href="#work">Services</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn" href="#order">Order now</a>
+  </div>
 </header>
 
 <main id="top">
-<div class="hero ruled">
-  <span class="spark" style="top:14%;left:8%;--d:6s;--tx:22px;--ty:-18px"></span>
-  <span class="spark" style="top:72%;left:42%;--d:8s;--tx:-16px;--ty:-24px"></span>
-  <span class="spark" style="top:22%;right:6%;--d:7s;--tx:-20px;--ty:20px"></span>
-  <div id="stage">
-    <h1 id="h1" aria-label="Your notes, written by hand."></h1>
-    <p class="lead">Send us any PDF, photo or scan. We copy it out in neat, real handwriting. <b>₹4 per written side.</b></p>
-    <div class="cta"><a class="btn" href="#order">Upload your work</a><a href="#price" style="font-weight:800">Check the price</a></div>
+<div class="hero-wrap ruled">
+  <div class="hero">
+    <span class="spark" style="top:14%;left:8%;--d:6s;--tx:22px;--ty:-18px"></span>
+    <span class="spark" style="top:72%;left:42%;--d:8s;--tx:-16px;--ty:-24px"></span>
+    <span class="spark" style="top:22%;right:6%;--d:7s;--tx:-20px;--ty:20px"></span>
+    <div id="stage">
+      <h1 id="h1" aria-label="Your notes, written by hand."></h1>
+      <p class="lead">Send us any PDF, photo or scan. We copy it out in neat, real handwriting. <b>₹4 per written side.</b></p>
+      <div class="cta">
+        <a class="btn" href="#order">Upload your work</a>
+        <a class="cta-link" href="#price">Check the price</a>
+      </div>
+    </div>
+    <div class="sheet ruled" aria-hidden="true">
+      <small id="tag">SCHOOL NOTEBOOK</small>
+      <div class="t" id="st"></div>
+      <div class="l" id="l1"></div>
+      <div class="l" id="l2"></div>
+      <div class="l" id="l3"></div>
+      <div class="l" id="l4"></div>
+      <div class="stamp"><div>per side<b>₹4</b></div></div>
+    </div>
+    <svg id="pen" viewBox="0 0 46 46" aria-hidden="true"><path d="M4 42 8 30 34 4l8 8L16 38z" fill="#162447"/><path d="M4 42 8 30l8 8z" fill="#ffe14d"/><path d="m34 4 8 8" stroke="#e5484d" stroke-width="5"/></svg>
   </div>
-  <div class="sheet ruled" aria-hidden="true">
-    <small id="tag">SCHOOL NOTEBOOK</small>
-    <div class="t" id="st"></div>
-    <div class="l" id="l1"></div><div class="l" id="l2"></div><div class="l" id="l3"></div><div class="l" id="l4"></div>
-    <div class="stamp"><div>per side<b>₹4</b></div></div>
-  </div>
-  <svg id="pen" viewBox="0 0 46 46" aria-hidden="true"><path d="M4 42 8 30 34 4l8 8L16 38z" fill="#162447"/><path d="M4 42 8 30l8 8z" fill="#ffe14d"/><path d="m34 4 8 8" stroke="#e5484d" stroke-width="5"/></svg>
 </div>
 
-<div class="belt" aria-hidden="true"><div id="belt"></div></div>
+<div class="belt-wrap" aria-hidden="true"><div class="belt"><div id="belt"></div></div></div>
 
 <section id="price" class="reveal">
-  <h2>What will it cost?</h2>
-  <p class="sub">One written face of a sheet is one side. Front and back is two sides, so ₹8.</p>
-  <div class="calc">
-    <div class="a"><p>Your estimate</p><div class="big" id="total" aria-live="polite">₹40</div><p id="calcNote">10 sides × ₹4</p></div>
-    <div class="ruled">
-      <label for="n">Written sides</label>
-      <div class="stepper"><button type="button" id="dec" aria-label="Fewer sides">−</button><input id="n" type="text" inputmode="numeric" value="10" autocomplete="off"><button type="button" id="inc" aria-label="More sides">+</button></div>
-      <input type="range" id="rng" min="1" max="200" value="10" aria-label="Sides slider">
-      <div class="chips" id="chips"></div>
-      <p style="margin:18px 0 0"><a class="btn" href="#order">Order these pages</a></p>
+  <div class="wrap">
+    <h2>What will it cost?</h2>
+    <p class="sub">One written face of a sheet is one side. Front and back is two sides, so ₹8.</p>
+    <div class="calc">
+      <div class="a">
+        <p>Your estimate</p>
+        <div class="big" id="total" aria-live="polite">₹40</div>
+        <p id="calcNote">10 sides × ₹4</p>
+      </div>
+      <div class="ruled">
+        <label for="n">Written sides</label>
+        <div class="stepper">
+          <button type="button" id="dec" aria-label="Fewer sides">−</button>
+          <input id="n" type="text" inputmode="numeric" value="10" autocomplete="off">
+          <button type="button" id="inc" aria-label="More sides">+</button>
+        </div>
+        <input type="range" id="rng" min="1" max="200" value="10" aria-label="Sides slider">
+        <div class="chips" id="chips"></div>
+        <p style="margin:18px 0 0"><a class="btn" href="#order">Order these pages</a></p>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="work" class="reveal">
-  <h2>What do you need written?</h2>
-  <p class="sub">Pick one. We will fill it into your order.</p>
-  <div class="kinds">
-    <button class="kind k1" data-k="College"><strong>College</strong><span>Practical records, course notes, project write-ups.</span></button>
-    <button class="kind k2" data-k="School"><strong>School</strong><span>Class notes, revision sheets, fair copies of homework.</span></button>
-    <button class="kind k3" data-k="Office"><strong>Office</strong><span>Meeting minutes, letters, handwritten records.</span></button>
+  <div class="wrap">
+    <h2>What do you need written?</h2>
+    <p class="sub">Pick one. We will fill it into your order.</p>
+    <div class="kinds">
+      <button type="button" class="kind k1" data-k="College"><strong>College</strong><span>Practical records, course notes, project write-ups.</span></button>
+      <button type="button" class="kind k2" data-k="School"><strong>School</strong><span>Class notes, revision sheets, fair copies of homework.</span></button>
+      <button type="button" class="kind k3" data-k="Office"><strong>Office</strong><span>Meeting minutes, letters, handwritten records.</span></button>
+    </div>
   </div>
 </section>
 
 <section id="how" class="ruled reveal">
-  <h2>Three steps</h2>
-  <p class="sub">No account needed.</p>
-  <div class="steps" id="steps">
-    <svg viewBox="0 0 1000 60" preserveAspectRatio="none"><path d="M60 40C250 -10 330 -10 500 30S760 70 940 20"/></svg>
-    <article><b>1</b><h3>Upload your original</h3><p>A PDF, JPG or PNG up to 8 MB. Up to three files per order.</p></article>
-    <article><b>2</b><h3>The studio gets it instantly</h3><p>Your file and brief reach the studio the moment you press send.</p></article>
-    <article><b>3</b><h3>We contact you</h3><p>We email or message you to confirm the details, delivery and payment.</p></article>
+  <div class="wrap">
+    <h2>Three steps</h2>
+    <p class="sub">No account needed.</p>
+    <div class="steps" id="steps">
+      <svg viewBox="0 0 1000 60" preserveAspectRatio="none"><path d="M60 40C250 -10 330 -10 500 30S760 70 940 20"/></svg>
+      <article><b>1</b><h3>Upload your original</h3><p>A PDF, JPG or PNG up to 8 MB. Up to three files per order.</p></article>
+      <article><b>2</b><h3>The studio gets it instantly</h3><p>Your file and brief reach the studio the moment you press send.</p></article>
+      <article><b>3</b><h3>We contact you</h3><p>We email or message you to confirm the details, delivery and payment.</p></article>
+    </div>
   </div>
 </section>
 
 <section id="order" class="reveal">
-  <div class="form">
-    <div>
-      <h2>Place your order</h2>
-      <p class="sub">Fill this in and attach your file. You will see a reference number straight away, and the studio is notified at once.</p>
-      <div class="ban" id="ban">To send orders, start the server with <b>Start_site.cmd</b> and open <b>http://localhost:4318</b>.</div>
+  <div class="wrap">
+    <div class="form">
+      <div>
+        <h2>Place your order</h2>
+        <p class="sub">Fill this in and attach your file. You will see a reference number straight away, and the studio is notified at once.</p>
+        <div class="ban" id="ban">To send orders, start the server with <b>Start_site.cmd</b> and open <b>http://localhost:4318</b>.</div>
+      </div>
+      <form id="f" novalidate>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label>Your name<input name="name" required maxlength="80" autocomplete="name" placeholder="Full name"></label>
+        <label>Your email<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+        <label>Phone / WhatsApp <small>optional</small><input name="phone" inputmode="tel" maxlength="24" autocomplete="tel" placeholder="+91 98765 43210"></label>
+        <label>Needed by <small>optional</small><input name="deadline" maxlength="40" placeholder="e.g. 5 December"></label>
+        <label>Type of work<select name="kind" id="kind"><option>College</option><option>School</option><option>Office</option></select></label>
+        <label>Written sides<input name="sides" id="sides" inputmode="numeric" value="10"></label>
+        <div class="w"><label class="drop" id="drop"><input type="file" id="file" multiple accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"><b>Drop your files here</b>or tap to choose · PDF, JPG, PNG · 8 MB each · up to 3</label></div>
+        <ul class="files w" id="list"></ul>
+        <label class="w">Instructions <small>optional</small><textarea name="notes" rows="3" maxlength="1800" placeholder="Blue ink, headings in black, leave margins…"></textarea></label>
+        <div class="sum w"><span>Your total</span><output id="q">₹40</output></div>
+        <div class="bar w" id="bar"><i></i></div>
+        <div class="err w" id="err" role="alert"></div>
+        <button class="btn w" id="go">Send my order</button>
+      </form>
     </div>
-    <form id="f" novalidate>
-      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <label>Your name<input name="name" required maxlength="80" autocomplete="name" placeholder="Full name"></label>
-      <label>Your email<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
-      <label>Phone / WhatsApp <small>optional</small><input name="phone" inputmode="tel" maxlength="24" autocomplete="tel" placeholder="+91 98765 43210"></label>
-      <label>Needed by <small>optional</small><input name="deadline" maxlength="40" placeholder="e.g. 5 December"></label>
-      <label>Type of work<select name="kind" id="kind"><option>College</option><option>School</option><option>Office</option></select></label>
-      <label>Written sides<input name="sides" id="sides" inputmode="numeric" value="10"></label>
-      <div class="w"><label class="drop" id="drop"><input type="file" id="file" multiple accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"><b>Drop your files here</b>or tap to choose · PDF, JPG, PNG · 8 MB each · up to 3</label></div>
-      <ul class="files w" id="list"></ul>
-      <label class="w">Instructions <small>optional</small><textarea name="notes" rows="3" maxlength="1800" placeholder="Blue ink, headings in black, leave margins…"></textarea></label>
-      <div class="sum w"><span>Your total</span><output id="q">₹40</output></div>
-      <div class="bar w" id="bar"><i></i></div>
-      <div class="err w" id="err" role="alert"></div>
-      <button class="btn w" id="go">Send my order</button>
-    </form>
   </div>
 </section>
 
 <section id="faq" class="reveal">
-  <h2>Good to know</h2>
-  <details><summary>Who can see my files?</summary><p>Only the studio. Files go straight to the studio and are never shown on this website.</p></details>
-  <details><summary>When do I pay?</summary><p>Nothing is charged online. The studio contacts you to confirm the details, delivery and payment.</p></details>
-  <details><summary>What counts as one side?</summary><p>One written face of a sheet. A sheet written on both sides is two sides.</p></details>
+  <div class="wrap">
+    <h2>Good to know</h2>
+    <details><summary>Who can see my files?</summary><p>Only the studio. Files go straight to the studio and are never shown on this website.</p></details>
+    <details><summary>When do I pay?</summary><p>Nothing is charged online. The studio contacts you to confirm the details, delivery and payment.</p></details>
+    <details><summary>What counts as one side?</summary><p>One written face of a sheet. A sheet written on both sides is two sides.</p></details>
+  </div>
 </section>
 </main>
 
-<footer><a class="brand" href="#top">TrueCraft Notes</a><span>Independent handwriting studio · ₹4 per written side</span></footer>
+<footer>
+  <div class="ftr-in">
+    <a class="brand" href="#top">TrueCraft Notes</a>
+    <span>Independent handwriting studio · ₹4 per written side</span>
+  </div>
+</footer>
 
 <script>
 const $=s=>document.querySelector(s),inr=n=>'₹'+n.toLocaleString('en-IN'),RM=matchMedia('(prefers-reduced-motion:reduce)').matches,sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -304,26 +380,17 @@ const closeIntro=()=>intro&&intro.classList.add('hide');
 $('#skipIntro').onclick=closeIntro;
 setTimeout(closeIntro,RM?0:1250);
 
-// ---- Auto System / Light / Dark Theme ----
-const mql=matchMedia('(prefers-color-scheme:dark)'),themeBtn=$('#themeBtn');
-const labels={system:'🖥️ System',light:'☀️ Light',dark:'🌙 Dark'},orderMode=['system','light','dark'];
-function applyTheme(mode){
-  localStorage.setItem('tc-theme',mode);
-  const dark=mode==='dark'||(mode==='system'&&mql.matches);
-  document.documentElement.dataset.theme=dark?'dark':'light';
-  document.documentElement.dataset.mode=mode;
-  themeBtn.textContent=labels[mode];
-}
-applyTheme(localStorage.getItem('tc-theme')||'system');
-mql.addEventListener('change',()=>{if((localStorage.getItem('tc-theme')||'system')==='system')applyTheme('system')});
-themeBtn.onclick=()=>{const cur=localStorage.getItem('tc-theme')||'system';applyTheme(orderMode[(orderMode.indexOf(cur)+1)%3])};
-
-// ---- Calculator (single source of truth) ----
-let sides=10,shown=40;const clamp=v=>Math.min(1000,Math.max(1,Math.round(+v)||1));
+// ---- Calculator ----
+let sides=10,shown=40;
+const clamp=v=>Math.min(1000,Math.max(1,Math.round(+v)||1));
 function count(to){
   const from=shown,t0=performance.now();
   if(RM){shown=to;$('#total').textContent=inr(to);return}
-  (function s(t){const k=Math.min(1,(t-t0)/420),v=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));shown=v;$('#total').textContent=inr(v);if(k<1)requestAnimationFrame(s)})(t0);
+  (function s(t){
+    const k=Math.min(1,(t-t0)/420),v=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));
+    shown=v;$('#total').textContent=inr(v);
+    if(k<1)requestAnimationFrame(s);
+  })(t0);
 }
 function set(v,src){
   sides=clamp(v);
@@ -335,20 +402,59 @@ function set(v,src){
   document.querySelectorAll('#chips button').forEach(b=>b.classList.toggle('on',+b.textContent===sides));
   count(sides*4);
 }
-[5,10,25,50,100,200].forEach(v=>{const b=document.createElement('button');b.type='button';b.textContent=v;b.onclick=()=>set(v);$('#chips').append(b)});
-$('#n').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);if(e.target.value)set(e.target.value,'n')};$('#n').onblur=()=>set(sides);
-$('#sides').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);if(e.target.value)set(e.target.value,'s')};$('#sides').onblur=()=>set(sides);
-$('#rng').oninput=e=>set(e.target.value);$('#inc').onclick=()=>set(sides+1);$('#dec').onclick=()=>set(sides-1);set(10);
-$('#belt').innerHTML=Array(2).fill('<span>College records</span><span>✎</span><span>School homework</span><span>✎</span><span>Office letters</span><span>✎</span><span>₹4 a side</span><span>✎</span>').join('');
-document.querySelectorAll('.kind').forEach(b=>b.onclick=()=>{document.querySelectorAll('.kind').forEach(x=>x.classList.toggle('on',x===b));$('#kind').value=b.dataset.k;$('#order').scrollIntoView()});
+[5,10,25,50,100,200].forEach(v=>{
+  const b=document.createElement('button');
+  b.type='button';b.textContent=v;b.onclick=()=>set(v);
+  $('#chips').append(b);
+});
+$('#n').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);if(e.target.value)set(e.target.value,'n')};
+$('#n').onblur=()=>set(sides);
+$('#sides').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,4);if(e.target.value)set(e.target.value,'s')};
+$('#sides').onblur=()=>set(sides);
+$('#rng').oninput=e=>set(e.target.value);
+$('#inc').onclick=()=>set(sides+1);
+$('#dec').onclick=()=>set(sides-1);
+set(10);
 
-// ---- Handwriting Animation ----
+$('#belt').innerHTML=Array(2).fill('<span>College records</span><span>✎</span><span>School homework</span><span>✎</span><span>Office letters</span><span>✎</span><span>₹4 a side</span><span>✎</span>').join('');
+document.querySelectorAll('.kind').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.kind').forEach(x=>x.classList.toggle('on',x===b));
+  $('#kind').value=b.dataset.k;
+  $('#order').scrollIntoView();
+});
+
+// ---- Handwriting Animation (word-safe wrapping for mobile) ----
 const pen=$('#pen'),hero=$('.hero');
-function nib(el){const h=hero.getBoundingClientRect(),r=el.getBoundingClientRect();pen.style.left=(r.right-h.left-4)+'px';pen.style.top=(r.bottom-h.top-40)+'px';pen.style.opacity=1}
+function nib(el){
+  if(innerWidth<=860)return;
+  const h=hero.getBoundingClientRect(),r=el.getBoundingClientRect();
+  pen.style.left=(r.right-h.left-4)+'px';
+  pen.style.top=(r.bottom-h.top-38)+'px';
+  pen.style.opacity=1;
+}
 async function write(el,text,ms=42){
-  el.textContent='';el.setAttribute('aria-hidden','true');
-  const sp=[...text].map(c=>{const s=document.createElement('span');s.textContent=c===' '?'\u00a0':c;s.className='ch'+(c===' '?' sp':'');el.append(s);return s});
-  for(const s of sp){if(RM){s.classList.add('on');continue}s.classList.add('on');nib(s);await sleep(ms+Math.random()*26)}
+  el.textContent='';
+  el.setAttribute('aria-hidden','true');
+  const sp=[];
+  text.split(' ').forEach((word,wi,arr)=>{
+    const w=document.createElement('span');
+    w.className='wd';
+    for(const c of word){
+      const s=document.createElement('span');
+      s.textContent=c;
+      s.className='ch';
+      w.append(s);
+      sp.push(s);
+    }
+    el.append(w);
+    if(wi<arr.length-1)el.append(' ');
+  });
+  for(const s of sp){
+    if(RM){s.classList.add('on');continue}
+    s.classList.add('on');
+    nib(s);
+    await sleep(ms+Math.random()*24);
+  }
 }
 const samples=[
   ['SCHOOL NOTEBOOK','The water cycle',['Water rises as vapour,','cools into clouds,','and falls again as rain.','Neat. Clear. By hand.']],
@@ -357,23 +463,29 @@ const samples=[
 ];
 (async()=>{
   await sleep(RM?0:850);
-  const h=$('#h1');h.textContent='';const a=document.createElement('span'),b=document.createElement('mark');
+  const h=$('#h1');h.textContent='';
+  const a=document.createElement('span'),b=document.createElement('mark');
   h.append(a,document.createElement('br'),b);
-  await write(a,'Your notes,',65);await write(b,'written by hand.',55);
+  await write(a,'Your notes,',60);
+  await write(b,'written by hand.',50);
   for(let i=0;;i=(i+1)%3){
-    const [tag,title,ls]=samples[i];$('#tag').textContent=tag;
-    await write($('#st'),title,48);
-    for(let j=0;j<4;j++)await write($('#l'+(j+1)),ls[j],32);
-    await sleep(RM?60000:3400);if(RM)break;
+    const [tag,title,ls]=samples[i];
+    $('#tag').textContent=tag;
+    await write($('#st'),title,45);
+    for(let j=0;j<4;j++)await write($('#l'+(j+1)),ls[j],30);
+    await sleep(RM?60000:3400);
+    if(RM)break;
     for(const id of ['#st','#l1','#l2','#l3','#l4'])$(id).textContent='';
   }
 })();
 
 // ---- Scroll Reveal + Step Path ----
-const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.18});
+const io=new IntersectionObserver(es=>es.forEach(x=>{
+  if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}
+}),{threshold:.12});
 document.querySelectorAll('.reveal,#steps').forEach(el=>io.observe(el));
 
-// ---- Confetti Satisfaction Burst ----
+// ---- Confetti Burst ----
 function celebrate(){
   if(RM)return;
   const c=$('#confettiCanvas'),ctx=c.getContext('2d');
@@ -389,15 +501,21 @@ function celebrate(){
     ctx.clearRect(0,0,c.width,c.height);let alive=false;
     for(const p of ps){
       p.x+=p.vx;p.y+=p.vy;p.vy+=.34;p.r+=p.vr;p.life-=.011;
-      if(p.life>0){alive=true;ctx.save();ctx.globalAlpha=p.life;ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.col;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.65);ctx.restore()}
+      if(p.life>0){
+        alive=true;ctx.save();ctx.globalAlpha=p.life;ctx.translate(p.x,p.y);ctx.rotate(p.r);
+        ctx.fillStyle=p.col;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.65);ctx.restore();
+      }
     }
     if(alive)requestAnimationFrame(loop);else ctx.clearRect(0,0,c.width,c.height);
   })();
 }
 
 // ---- Upload Form ----
-const MAXB=8*1024*1024,OK=/\.(pdf|jpe?g|png)$/i;let picked=[];const err=m=>$('#err').textContent=m||'';
+const MAXB=8*1024*1024,OK=/\.(pdf|jpe?g|png)$/i;
+let picked=[];
+const err=m=>$('#err').textContent=m||'';
 if(location.protocol==='file:'){$('#ban').style.display='block'}
+
 function draw(){
   $('#list').innerHTML='';
   picked.forEach((f,i)=>{
@@ -433,7 +551,13 @@ $('#f').onsubmit=e=>{
   const d=new FormData(f);d.set('sides',sides);picked.forEach(p=>d.append('file',p));
   const x=new XMLHttpRequest(),go=$('#go'),bar=$('#bar');
   go.disabled=true;go.textContent='Sending…';bar.style.display='block';
-  x.upload.onprogress=p=>{if(p.lengthComputable){const v=Math.round(p.loaded/p.total*100);bar.firstElementChild.style.width=v+'%';go.textContent='Sending '+v+'%'}};
+  x.upload.onprogress=p=>{
+    if(p.lengthComputable){
+      const v=Math.round(p.loaded/p.total*100);
+      bar.firstElementChild.style.width=v+'%';
+      go.textContent='Sending '+v+'%';
+    }
+  };
   x.onload=()=>{
     let r={};try{r=JSON.parse(x.responseText)}catch{}
     if(x.status===201||x.status===200){
